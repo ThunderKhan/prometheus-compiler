@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/prom.dir/src/main.cpp.o -o prom 

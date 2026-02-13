@@ -1,0 +1,3 @@
+/mnt/c/Users/HP/Documents/Projects/prometheus-compiler/build/CMakeFiles/prometheus.dir
+/mnt/c/Users/HP/Documents/Projects/prometheus-compiler/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/HP/Documents/Projects/prometheus-compiler/build/CMakeFiles/rebuild_cache.dir
