@@ -85,7 +85,7 @@ public:
 
 
 private:
-    [[nodiscard]] std::optional<char> peak(int ahead = 0) const {
+    [[nodiscard]] inline std::optional<char> peak(int ahead = 0) const {
         std::size_t pos = m_index + ahead;
         if (pos >= m_src.size()) {
             return {};
@@ -93,7 +93,7 @@ private:
         return m_src[pos];
     }
 
-    char consume() {
+    inline char consume() {
         return m_src[m_index++];
     }
 
