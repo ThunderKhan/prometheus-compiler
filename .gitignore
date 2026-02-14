@@ -1,0 +1,54 @@
+# ----------------------------
+# C / C++ build artifacts
+# ----------------------------
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+
+# Executables (your compiler binary, test binaries, etc.)
+prometheus
+prometheus.exe
+
+# ----------------------------
+# Assembly output (important for you!)
+# ----------------------------
+*.s
+*.asm
+
+# ----------------------------
+# Build directories
+# ----------------------------
+build/
+bin/
+out/
+cmake-build-*/
+
+# ----------------------------
+# CMake / build system junk
+# (even if you don't use CMake yet)
+# ----------------------------
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# ----------------------------
+# VS Code
+# ----------------------------
+.vscode/
+!.vscode/extensions.json
+
+# ----------------------------
+# Linux / editor / OS junk
+# ----------------------------
+*~
+.DS_Store
+
+# ----------------------------
+# Debug / temp
+# ----------------------------
+*.log
+*.tmp
