@@ -3,78 +3,12 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <optional>
 #include <vector>
-#include <cctype>
 
-enum class TokenType {
-    kw_emit,
-    int_lit,
-    semi
-};
-
-struct Token {
-    TokenType type;
-    std::optional<std::string> value {};
-};
+#include "tokenization.hpp"
 
 std::vector<Token> tokenize(const std::string& str) {
-    std::vector<Token> tokens;
-    std::string buf;
-
-    std::size_t i = 0;
-
-    while (i < str.size()) {
-        unsigned char c = static_cast<unsigned char>(str[i]);
-
-        if (std::isspace(c)) {
-            ++i;
-            continue;
-        }
-
-        if (std::isalpha(c)) {
-            buf.clear();
-
-            while (i < str.size() &&
-                std::isalnum(static_cast<unsigned char>(str[i]))) {
-                buf.push_back(str[i]);
-                ++i;
-            }
-
-            if (buf == "emit") {
-                tokens.push_back({ TokenType::kw_emit });
-            } else {
-                std::cerr << "Unknown identifier: " << buf << '\n';
-                std::exit(EXIT_FAILURE);
-            }
-
-            continue;
-        }
-
-        if (std::isdigit(c)) {
-            buf.clear();
-
-            while (i < str.size() &&
-                std::isdigit(static_cast<unsigned char>(str[i]))) {
-                buf.push_back(str[i]);
-                ++i;
-            }
-
-            tokens.push_back({ TokenType::int_lit, buf });
-            continue;
-        }
-
-        if (c == ';') {
-            tokens.push_back({ TokenType::semi });
-            ++i;
-            continue;
-        }
-
-        std::cerr << "Unexpected character: '" << str[i] << "'\n";
-        std::exit(EXIT_FAILURE);
-    }
-
-    return tokens;
+    
 }
 
 std::string tokens_to_asm(const std::vector<Token>& tokens) {
@@ -146,8 +80,15 @@ int main(int argc,  char* argv[]) {
         file << tokens_to_asm(tokens);
     }
 
-    system( "nasm -f elf64 out.asm" );
-    system( "ld -o out out.o" );
+    if (system("nasm -f elf64 out.asm") != 0) {
+        std::cerr << "nasm failed\n";
+        return EXIT_FAILURE;
+    }
+
+    if (system("ld -o out out.o") != 0) {
+        std::cerr << "linking failed.\n";
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
