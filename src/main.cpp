@@ -7,10 +7,6 @@
 
 #include "tokenization.hpp"
 
-std::vector<Token> tokenize(const std::string& str) {
-    
-}
-
 std::string tokens_to_asm(const std::vector<Token>& tokens) {
     std::stringstream out;
 
@@ -38,11 +34,12 @@ std::string tokens_to_asm(const std::vector<Token>& tokens) {
                 std::exit(EXIT_FAILURE);
             }
 
+            // exit syscall
             out << "    mov rax, 60\n";
             out << "    mov rdi, " << tokens[i + 1].value.value() << "\n";
             out << "    syscall\n";
 
-            i += 3;   // consume: emit, int, ;
+            i += 3;
             continue;
         }
 
@@ -53,40 +50,47 @@ std::string tokens_to_asm(const std::vector<Token>& tokens) {
     return out.str();
 }
 
-int main(int argc,  char* argv[]) {
+int main(int argc, char* argv[]) {
+
     if (argc != 2) {
-        std::cerr << "Incorrect usage. Correct usage is..." << std::endl;
-        std::cerr << "prometheus <intput.pr>" << std::endl;
+        std::cerr << "Incorrect usage.\n";
+        std::cerr << "prometheus <input.pr>\n";
         return EXIT_FAILURE;
     }
-    
-    std::string contents; 
+
+    std::string contents;
     {
-        std::fstream input(argv[1], std::ios::in);
+        std::ifstream input(argv[1]);
         if (!input) {
             std::cerr << "Could not open file\n";
             return EXIT_FAILURE;
         }
 
-        std::stringstream contents_stream;
-        contents_stream << input.rdbuf();
-        contents = contents_stream.str();
+        std::stringstream ss;
+        ss << input.rdbuf();
+        contents = ss.str();
     }
-    
-    std::vector<Token> tokens = tokenize(contents);
-    
+
+    Tokenizer tokenizer(contents);
+    std::vector<Token> tokens = tokenizer.tokenize();
+
     {
-        std::fstream file("out.asm", std::ios::out);
+        std::ofstream file("out.asm");
+        if (!file) {
+            std::cerr << "Could not write out.asm\n";
+            return EXIT_FAILURE;
+        }
+
         file << tokens_to_asm(tokens);
     }
 
-    if (system("nasm -f elf64 out.asm") != 0) {
+    if (std::system("nasm -f elf64 out.asm") != 0) {
         std::cerr << "nasm failed\n";
         return EXIT_FAILURE;
     }
 
-    if (system("ld -o out out.o") != 0) {
-        std::cerr << "linking failed.\n";
+    if (std::system("ld -o out out.o") != 0) {
+        std::cerr << "linking failed\n";
         return EXIT_FAILURE;
     }
 

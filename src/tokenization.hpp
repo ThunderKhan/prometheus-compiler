@@ -20,7 +20,7 @@ struct Token {
 
 class Tokenizer {
 public:
-    inline Tokenizer(const std::string& src)
+    inline explicit Tokenizer(const std::string& src)
         : m_src(std::move(src))
     {
     }
@@ -85,12 +85,12 @@ public:
 
 
 private:
-    [[nodiscard]] std::optional<char> peak(int ahead = 1) const {
-        if (m_index + ahead >= m_src.size()) {
+    [[nodiscard]] std::optional<char> peak(int ahead = 0) const {
+        std::size_t pos = m_index + ahead;
+        if (pos >= m_src.size()) {
             return {};
-        } else {
-            return m_src[m_index];
         }
+        return m_src[pos];
     }
 
     char consume() {
