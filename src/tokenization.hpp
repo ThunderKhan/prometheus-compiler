@@ -79,7 +79,7 @@ public:
             std::cerr << "Unexpected character: " << c << "\n";
             std::exit(1);
         }
-
+        m_index = 0;
         return tokens;
     }
 
@@ -97,6 +97,6 @@ private:
         return m_src[m_index++];
     }
 
-    int m_index;
+    int m_index = 0;
     const std::string m_src;
 };
